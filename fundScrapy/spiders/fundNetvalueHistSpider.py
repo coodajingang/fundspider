@@ -24,7 +24,7 @@ class FundNetvalHistSpider(scrapy.Spider):
 	
 	# 标志 表示是否清空原来已有数据， 重新下载 ， 适用于非增量情况；
 	# 当增量下载时， 设置为Flase
-	delFirstThenInsert = True
+	delFirstThenInsert = False
 	
 	def start_requests(self):
 		curent = 1
