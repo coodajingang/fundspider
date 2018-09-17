@@ -9,7 +9,6 @@
 # 
 
 import scrapy
-from scrapy import log 
 from fundScrapy.items import FundscrapyItem
 from fundScrapy.dbUtils import DbUtils
 from fundScrapy.parseFunHisJs import FunHisParse 
@@ -44,7 +43,6 @@ class FundNetvalHistSpider(scrapy.Spider):
 			# 进行一个代码的抓取  
 			code1 = '161607'
 
-			log.msg("one code test")
 			codelist = self.dbUtil.getFunListByCode(code1)
 
 			for r in codelist:
@@ -96,7 +94,7 @@ class FundNetvalHistSpider(scrapy.Spider):
 		code = response.meta['code']
 		fundType = response.meta['fundType']
 
-		text = response.text;
+		text = response.text
 
 		if (text is None or len(text) == 0 ):
 			print("响应结果text内容为空！")
@@ -109,8 +107,8 @@ class FundNetvalHistSpider(scrapy.Spider):
 			funParse = FunHisParse(text, code)
 			res = funParse.parse2()
 		except Exception as e:
-			traceback.print_exc();
-			excstr = traceback.format_exc();
+			traceback.print_exc()
+			excstr = traceback.format_exc()
 			self.dbUtil.saveCrawLog(code, fundType, 'error', '取总条数response解析异常, ' + excstr)
 			raise e
 
@@ -148,22 +146,23 @@ class FundNetvalHistSpider(scrapy.Spider):
 		currentcount = response.meta['currentcount']
 		totalcount = response.meta['totalcount']
 
-		text = response.text;
+		text = response.text
 
 		try:
 			funParse = FunHisParse(text, code)
 			res = funParse.parse2()
 		except Exception as e:
-			traceback.print_exc();
-			excstr = traceback.format_exc();
+			traceback.print_exc()
+			excstr = traceback.format_exc()
 			self.dbUtil.saveCrawLog(code, fundType, 'error', '取总记录response解析异常, ' + excstr)
 			raise e
 
-
-		if (res.get('records') != records):
-			print(code, "解析结果数据总条数不一致 ，请检查！", res.get('records') , records )
-			self.dbUtil.saveCrawLog(code, fundType, 'error', '取总记录返回条数不一致' + str(records) + "," + str(res.get('records')) )
-			return
+		# bug001 fix： 这里res中的records是总记录条数 ， records 是差异记录条数 ， 增量下载时两值不同 。 
+		# 有后续的入库总记录条数比较足够了！
+		#if (res.get('records') != records):
+		#	print(code, "解析结果数据总条数不一致 ，请检查！", res.get('records') , records )
+		#	self.dbUtil.saveCrawLog(code, fundType, 'error', '取总记录返回条数不一致' + str(records) + "," + str(res.get('records')) )
+		#	return
 
 		contentList = res.get('content')
 

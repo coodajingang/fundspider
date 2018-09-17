@@ -12,12 +12,12 @@
 from datetime import datetime
 
 # 文件及路径，log目录需要先建好
-today = datetime.now()
-log_file_path = "log/scrapy_{}_{}_{}.log".format(today.year, today.month, today.day)
+#today = datetime.now()
+#log_file_path = "log/scrapy_{}_{}_{}.log".format(today.year, today.month, today.day)
 
 # 日志输出
-LOG_LEVEL = 'INFO'
-LOG_FILE = log_file_path
+#LOG_LEVEL = 'INFO'
+#LOG_FILE = log_file_path
 
 BOT_NAME = 'fundScrapy'
 
